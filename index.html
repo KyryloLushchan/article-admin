@@ -22,6 +22,7 @@
       placeholder="Поиск по артикулу или названию…"
       autocomplete="off"
     />
+    <button id="add-product-btn" class="btn-primary">+ Добавить товар</button>
     <span id="count" class="count"></span>
   </div>
 
@@ -34,6 +35,26 @@
 
   <!-- Скрытый input для загрузки фото -->
   <input type="file" id="photo-input" accept="image/*" multiple hidden />
+
+  <!-- Модалка добавления товара -->
+  <div id="add-modal" class="modal-overlay" hidden>
+    <form id="add-form" class="modal">
+      <h2>Новый товар</h2>
+      <label>
+        Артикул
+        <input type="text" id="add-article" required autocomplete="off" />
+      </label>
+      <label>
+        Название
+        <input type="text" id="add-name" autocomplete="off" />
+      </label>
+      <p id="add-error" class="error" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="add-cancel">Отмена</button>
+        <button type="submit" class="btn-primary" id="add-save">Создать</button>
+      </div>
+    </form>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>

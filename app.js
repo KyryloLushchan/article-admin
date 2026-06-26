@@ -332,6 +332,74 @@ loadMoreBtn.addEventListener("click", () => loadProducts(false));
 
 document.getElementById("logout-btn").addEventListener("click", signOut);
 
+// ---------- добавление товара ----------
+
+const addModal = document.getElementById("add-modal");
+const addForm = document.getElementById("add-form");
+const addArticle = document.getElementById("add-article");
+const addName = document.getElementById("add-name");
+const addError = document.getElementById("add-error");
+const addSave = document.getElementById("add-save");
+
+function openAddModal() {
+  addForm.reset();
+  addError.hidden = true;
+  addModal.hidden = false;
+  addArticle.focus();
+}
+
+function closeAddModal() {
+  addModal.hidden = true;
+}
+
+document.getElementById("add-product-btn").addEventListener("click", openAddModal);
+document.getElementById("add-cancel").addEventListener("click", closeAddModal);
+
+// Закрытие по клику на фон
+addModal.addEventListener("click", (e) => {
+  if (e.target === addModal) closeAddModal();
+});
+
+addForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  addError.hidden = true;
+
+  const article = addArticle.value.trim();
+  const name = addName.value.trim();
+  if (!article) {
+    addError.textContent = "Артикул обязателен";
+    addError.hidden = false;
+    return;
+  }
+
+  addSave.disabled = true;
+  addSave.textContent = "…";
+
+  const { data, error } = await sb
+    .from("products")
+    .insert({ article, name })
+    .select("id, article, name")
+    .single();
+
+  addSave.disabled = false;
+  addSave.textContent = "Создать";
+
+  if (error) {
+    addError.textContent =
+      error.code === "23505"
+        ? `Товар с артикулом «${article}» уже существует`
+        : "Не удалось создать: " + error.message;
+    addError.hidden = false;
+    return;
+  }
+
+  // Новую карточку показываем сверху списка
+  listEl.prepend(renderCard(data, []));
+  total += 1;
+  countEl.textContent = `Найдено: ${total}`;
+  closeAddModal();
+});
+
 // ---------- старт ----------
 
 (async function init() {
