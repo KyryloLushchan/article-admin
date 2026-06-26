@@ -1,16 +1,16 @@
-// app.js — каталог товаров: список, поиск, пагинация, редактирование, фото.
-// Подключается ПОСЛЕ config.js / auth.js.
+// app.js — каталог товарів: список, пошук, пагінація, редагування, фото.
+// Підключається ПІСЛЯ config.js / auth.js.
 
 const BUCKET = "product-photos";
 const PAGE_SIZE = 20;
 
-// Состояние списка
+// Стан списку
 let query = "";
 let offset = 0;
 let total = 0;
 let loading = false;
 
-// Текущий товар для загрузки фото (через скрытый file-input)
+// Поточний товар для завантаження фото (через прихований file-input)
 let uploadTargetId = null;
 
 // DOM
@@ -21,7 +21,7 @@ const statusEl = document.getElementById("status");
 const loadMoreBtn = document.getElementById("load-more");
 const photoInput = document.getElementById("photo-input");
 
-// ---------- утилиты ----------
+// ---------- утиліти ----------
 
 function publicUrl(filePath) {
   return sb.storage.from(BUCKET).getPublicUrl(filePath).data.publicUrl;
@@ -41,12 +41,12 @@ function debounce(fn, ms) {
   };
 }
 
-// Артикул без пробелов — для пути в Storage
+// Артикул без пробілів — для шляху в Storage
 function articleSlug(article) {
   return String(article).replace(/\s+/g, "");
 }
 
-// ---------- загрузка данных ----------
+// ---------- завантаження даних ----------
 
 async function fetchPhotos(productIds) {
   if (productIds.length === 0) return {};
@@ -67,7 +67,7 @@ async function fetchPhotos(productIds) {
 async function loadProducts(reset) {
   if (loading) return;
   loading = true;
-  statusEl.textContent = "Загрузка…";
+  statusEl.textContent = "Завантаження…";
 
   if (reset) {
     offset = 0;
@@ -96,17 +96,17 @@ async function loadProducts(reset) {
     }
 
     offset += products.length;
-    countEl.textContent = `Найдено: ${total}`;
+    countEl.textContent = `Знайдено: ${total}`;
     loadMoreBtn.hidden = offset >= total;
-    statusEl.textContent = total === 0 ? "Ничего не найдено" : "";
+    statusEl.textContent = total === 0 ? "Нічого не знайдено" : "";
   } catch (err) {
-    statusEl.textContent = "Ошибка загрузки: " + (err.message || err);
+    statusEl.textContent = "Помилка завантаження: " + (err.message || err);
   } finally {
     loading = false;
   }
 }
 
-// ---------- рендер карточки ----------
+// ---------- рендер картки ----------
 
 function renderCard(product, photos) {
   const card = document.createElement("article");
@@ -119,31 +119,31 @@ function renderCard(product, photos) {
       <span class="article">${escapeHtml(product.article)}</span>
       <div class="name-row">
         <span class="name">${escapeHtml(product.name)}</span>
-        <button class="btn-link edit-name">✎ изменить</button>
+        <button class="btn-link edit-name">✎ змінити</button>
       </div>
     </div>
     <div class="gallery"></div>
     <div class="card-actions">
-      <button class="btn-secondary add-photo">+ Добавить фото</button>
-      <button class="btn-danger delete-product">Удалить товар</button>
+      <button class="btn-secondary add-photo">+ Додати фото</button>
+      <button class="btn-danger delete-product">Видалити товар</button>
     </div>
   `;
 
   card.querySelector(".gallery").replaceWith(renderGallery(photos));
 
-  // Редактирование названия
+  // Редагування назви
   card.querySelector(".edit-name").addEventListener("click", () =>
     startEditName(card, product)
   );
 
-  // Добавление фото
+  // Додавання фото
   card.querySelector(".add-photo").addEventListener("click", () => {
     uploadTargetId = product.id;
     photoInput.value = "";
     photoInput.click();
   });
 
-  // Удаление товара
+  // Видалення товару
   card.querySelector(".delete-product").addEventListener("click", () =>
     deleteProduct(card, product)
   );
@@ -156,7 +156,7 @@ function renderGallery(photos) {
   gallery.className = "gallery";
 
   if (photos.length === 0) {
-    gallery.innerHTML = `<span class="no-photos">нет фото</span>`;
+    gallery.innerHTML = `<span class="no-photos">немає фото</span>`;
     return gallery;
   }
 
@@ -167,7 +167,7 @@ function renderGallery(photos) {
       <a href="${publicUrl(photo.file_path)}" target="_blank" rel="noopener">
         <img src="${publicUrl(photo.file_path)}" alt="" loading="lazy" />
       </a>
-      <button class="thumb-del" title="Удалить">✕</button>
+      <button class="thumb-del" title="Видалити">✕</button>
     `;
     thumb
       .querySelector(".thumb-del")
@@ -183,7 +183,7 @@ async function refreshGallery(card, productId) {
   card.querySelector(".gallery").replaceWith(renderGallery(photos));
 }
 
-// ---------- редактирование названия ----------
+// ---------- редагування назви ----------
 
 function startEditName(card, product) {
   const nameRow = card.querySelector(".name-row");
@@ -191,8 +191,8 @@ function startEditName(card, product) {
 
   nameRow.innerHTML = `
     <input class="name-input" type="text" value="${escapeHtml(currentName)}" />
-    <button class="btn-primary save-name">Сохранить</button>
-    <button class="btn-link cancel-name">Отмена</button>
+    <button class="btn-primary save-name">Зберегти</button>
+    <button class="btn-link cancel-name">Скасувати</button>
   `;
 
   const input = nameRow.querySelector(".name-input");
@@ -202,7 +202,7 @@ function startEditName(card, product) {
   const restore = (name) => {
     nameRow.innerHTML = `
       <span class="name">${escapeHtml(name)}</span>
-      <button class="btn-link edit-name">✎ изменить</button>
+      <button class="btn-link edit-name">✎ змінити</button>
     `;
     nameRow
       .querySelector(".edit-name")
@@ -229,9 +229,9 @@ function startEditName(card, product) {
       .eq("id", product.id);
 
     if (error) {
-      alert("Не удалось сохранить: " + error.message);
+      alert("Не вдалося зберегти: " + error.message);
       btn.disabled = false;
-      btn.textContent = "Сохранить";
+      btn.textContent = "Зберегти";
       return;
     }
     product.name = newName;
@@ -239,7 +239,7 @@ function startEditName(card, product) {
   });
 }
 
-// ---------- загрузка фото ----------
+// ---------- завантаження фото ----------
 
 photoInput.addEventListener("change", async () => {
   const files = Array.from(photoInput.files || []);
@@ -249,9 +249,9 @@ photoInput.addEventListener("change", async () => {
   const article = card.dataset.article;
   const productId = Number(card.dataset.id);
 
-  statusEl.textContent = `Загрузка фото (0/${files.length})…`;
+  statusEl.textContent = `Завантаження фото (0/${files.length})…`;
 
-  // Текущий максимум position для этого товара
+  // Поточний максимум position для цього товару
   const { data: existing } = await sb
     .from("product_photos")
     .select("position")
@@ -273,7 +273,7 @@ photoInput.addEventListener("change", async () => {
         });
       if (upErr) throw upErr;
 
-      // file_id оставляем пустым — его проставляет бот
+      // file_id залишаємо порожнім — його проставляє бот
       const { error: insErr } = await sb.from("product_photos").insert({
         product_id: productId,
         file_path: path,
@@ -284,9 +284,9 @@ photoInput.addEventListener("change", async () => {
 
       nextPos += 1;
       done += 1;
-      statusEl.textContent = `Загрузка фото (${done}/${files.length})…`;
+      statusEl.textContent = `Завантаження фото (${done}/${files.length})…`;
     } catch (err) {
-      alert("Ошибка загрузки фото: " + (err.message || err));
+      alert("Помилка завантаження фото: " + (err.message || err));
     }
   }
 
@@ -295,41 +295,41 @@ photoInput.addEventListener("change", async () => {
   uploadTargetId = null;
 });
 
-// ---------- удаление фото ----------
+// ---------- видалення фото ----------
 
 async function deletePhoto(photo, thumbEl) {
-  if (!confirm("Удалить это фото?")) return;
+  if (!confirm("Видалити це фото?")) return;
 
-  // Сначала из Storage
+  // Спочатку зі Storage
   const { error: rmErr } = await sb.storage.from(BUCKET).remove([photo.file_path]);
   if (rmErr) {
-    alert("Не удалось удалить файл из Storage: " + rmErr.message);
+    alert("Не вдалося видалити файл зі Storage: " + rmErr.message);
     return;
   }
 
-  // Затем запись в таблице
+  // Потім запис у таблиці
   const { error: delErr } = await sb
     .from("product_photos")
     .delete()
     .eq("id", photo.id);
   if (delErr) {
-    alert("Файл удалён, но запись в БД не удалилась: " + delErr.message);
+    alert("Файл видалено, але запис у БД не видалився: " + delErr.message);
     return;
   }
 
   const gallery = thumbEl.parentElement;
   thumbEl.remove();
   if (!gallery.querySelector(".thumb")) {
-    gallery.innerHTML = `<span class="no-photos">нет фото</span>`;
+    gallery.innerHTML = `<span class="no-photos">немає фото</span>`;
   }
 }
 
-// ---------- удаление товара ----------
+// ---------- видалення товару ----------
 
 async function deleteProduct(card, product) {
   if (
     !confirm(
-      `Удалить товар «${product.article}» и все его фото? Действие необратимо.`
+      `Видалити товар «${product.article}» та всі його фото? Дію не можна скасувати.`
     )
   ) {
     return;
@@ -337,24 +337,24 @@ async function deleteProduct(card, product) {
 
   const btn = card.querySelector(".delete-product");
   btn.disabled = true;
-  btn.textContent = "Удаление…";
+  btn.textContent = "Видалення…";
 
   try {
-    // 1. Берём все фото товара
+    // 1. Беремо всі фото товару
     const { data: photos, error: phErr } = await sb
       .from("product_photos")
       .select("id, file_path")
       .eq("product_id", product.id);
     if (phErr) throw phErr;
 
-    // 2. Удаляем файлы из Storage
+    // 2. Видаляємо файли зі Storage
     if (photos && photos.length) {
       const { error: rmErr } = await sb.storage
         .from(BUCKET)
         .remove(photos.map((p) => p.file_path));
       if (rmErr) throw rmErr;
 
-      // 3. Удаляем записи о фото
+      // 3. Видаляємо записи про фото
       const { error: delPhErr } = await sb
         .from("product_photos")
         .delete()
@@ -362,7 +362,7 @@ async function deleteProduct(card, product) {
       if (delPhErr) throw delPhErr;
     }
 
-    // 4. Удаляем сам товар
+    // 4. Видаляємо сам товар
     const { error: delErr } = await sb
       .from("products")
       .delete()
@@ -371,15 +371,15 @@ async function deleteProduct(card, product) {
 
     card.remove();
     total = Math.max(0, total - 1);
-    countEl.textContent = `Найдено: ${total}`;
+    countEl.textContent = `Знайдено: ${total}`;
   } catch (err) {
-    alert("Не удалось удалить товар: " + (err.message || err));
+    alert("Не вдалося видалити товар: " + (err.message || err));
     btn.disabled = false;
-    btn.textContent = "Удалить товар";
+    btn.textContent = "Видалити товар";
   }
 }
 
-// ---------- события ----------
+// ---------- події ----------
 
 searchEl.addEventListener(
   "input",
@@ -393,7 +393,7 @@ loadMoreBtn.addEventListener("click", () => loadProducts(false));
 
 document.getElementById("logout-btn").addEventListener("click", signOut);
 
-// ---------- добавление товара ----------
+// ---------- додавання товару ----------
 
 const addModal = document.getElementById("add-modal");
 const addForm = document.getElementById("add-form");
@@ -416,7 +416,7 @@ function closeAddModal() {
 document.getElementById("add-product-btn").addEventListener("click", openAddModal);
 document.getElementById("add-cancel").addEventListener("click", closeAddModal);
 
-// Закрытие по клику на фон
+// Закриття по кліку на фон
 addModal.addEventListener("click", (e) => {
   if (e.target === addModal) closeAddModal();
 });
@@ -428,7 +428,7 @@ addForm.addEventListener("submit", async (e) => {
   const article = addArticle.value.trim();
   const name = addName.value.trim();
   if (!article) {
-    addError.textContent = "Артикул обязателен";
+    addError.textContent = "Артикул обов'язковий";
     addError.hidden = false;
     return;
   }
@@ -443,21 +443,21 @@ addForm.addEventListener("submit", async (e) => {
     .single();
 
   addSave.disabled = false;
-  addSave.textContent = "Создать";
+  addSave.textContent = "Створити";
 
   if (error) {
     addError.textContent =
       error.code === "23505"
-        ? `Товар с артикулом «${article}» уже существует`
-        : "Не удалось создать: " + error.message;
+        ? `Товар з артикулом «${article}» вже існує`
+        : "Не вдалося створити: " + error.message;
     addError.hidden = false;
     return;
   }
 
-  // Новую карточку показываем сверху списка
+  // Нову картку показуємо зверху списку
   listEl.prepend(renderCard(data, []));
   total += 1;
-  countEl.textContent = `Найдено: ${total}`;
+  countEl.textContent = `Знайдено: ${total}`;
   closeAddModal();
 });
 

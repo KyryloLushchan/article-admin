@@ -18,7 +18,7 @@ body {
   color: var(--text);
 }
 
-/* ---------- Логин ---------- */
+/* ---------- Логін ---------- */
 
 .login-page {
   display: flex;
@@ -288,7 +288,7 @@ button { font-family: inherit; }
 .login-card button:hover { background: var(--primary-dark); }
 .login-card button:disabled { opacity: 0.6; cursor: default; }
 
-/* ---------- Прочее ---------- */
+/* ---------- Інше ---------- */
 
 .load-more-wrap {
   max-width: 900px;

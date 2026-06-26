@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Каталог товаров</title>
+  <title>Каталог товарів</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <h1>Каталог товаров</h1>
+    <h1>Каталог товарів</h1>
     <div class="topbar-right">
       <span id="user-email" class="user-email"></span>
-      <button id="logout-btn" class="btn-secondary">Выйти</button>
+      <button id="logout-btn" class="btn-secondary">Вийти</button>
     </div>
   </header>
 
@@ -19,39 +19,39 @@
     <input
       type="search"
       id="search"
-      placeholder="Поиск по артикулу или названию…"
+      placeholder="Пошук за артикулом або назвою…"
       autocomplete="off"
     />
-    <button id="add-product-btn" class="btn-primary">+ Добавить товар</button>
+    <button id="add-product-btn" class="btn-primary">+ Додати товар</button>
     <span id="count" class="count"></span>
   </div>
 
   <main id="list" class="list"></main>
 
   <div class="load-more-wrap">
-    <button id="load-more" class="btn-secondary" hidden>Показать ещё</button>
+    <button id="load-more" class="btn-secondary" hidden>Показати ще</button>
     <p id="status" class="status"></p>
   </div>
 
-  <!-- Скрытый input для загрузки фото -->
+  <!-- Прихований input для завантаження фото -->
   <input type="file" id="photo-input" accept="image/*" multiple hidden />
 
-  <!-- Модалка добавления товара -->
+  <!-- Модалка додавання товару -->
   <div id="add-modal" class="modal-overlay" hidden>
     <form id="add-form" class="modal">
-      <h2>Новый товар</h2>
+      <h2>Новий товар</h2>
       <label>
         Артикул
         <input type="text" id="add-article" required autocomplete="off" />
       </label>
       <label>
-        Название
+        Назва
         <input type="text" id="add-name" autocomplete="off" />
       </label>
       <p id="add-error" class="error" hidden></p>
       <div class="modal-actions">
-        <button type="button" class="btn-secondary" id="add-cancel">Отмена</button>
-        <button type="submit" class="btn-primary" id="add-save">Создать</button>
+        <button type="button" class="btn-secondary" id="add-cancel">Скасувати</button>
+        <button type="submit" class="btn-primary" id="add-save">Створити</button>
       </div>
     </form>
   </div>
