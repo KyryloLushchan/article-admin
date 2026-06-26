@@ -125,6 +125,7 @@ function renderCard(product, photos) {
     <div class="gallery"></div>
     <div class="card-actions">
       <button class="btn-secondary add-photo">+ Добавить фото</button>
+      <button class="btn-danger delete-product">Удалить товар</button>
     </div>
   `;
 
@@ -141,6 +142,11 @@ function renderCard(product, photos) {
     photoInput.value = "";
     photoInput.click();
   });
+
+  // Удаление товара
+  card.querySelector(".delete-product").addEventListener("click", () =>
+    deleteProduct(card, product)
+  );
 
   return card;
 }
@@ -315,6 +321,61 @@ async function deletePhoto(photo, thumbEl) {
   thumbEl.remove();
   if (!gallery.querySelector(".thumb")) {
     gallery.innerHTML = `<span class="no-photos">нет фото</span>`;
+  }
+}
+
+// ---------- удаление товара ----------
+
+async function deleteProduct(card, product) {
+  if (
+    !confirm(
+      `Удалить товар «${product.article}» и все его фото? Действие необратимо.`
+    )
+  ) {
+    return;
+  }
+
+  const btn = card.querySelector(".delete-product");
+  btn.disabled = true;
+  btn.textContent = "Удаление…";
+
+  try {
+    // 1. Берём все фото товара
+    const { data: photos, error: phErr } = await sb
+      .from("product_photos")
+      .select("id, file_path")
+      .eq("product_id", product.id);
+    if (phErr) throw phErr;
+
+    // 2. Удаляем файлы из Storage
+    if (photos && photos.length) {
+      const { error: rmErr } = await sb.storage
+        .from(BUCKET)
+        .remove(photos.map((p) => p.file_path));
+      if (rmErr) throw rmErr;
+
+      // 3. Удаляем записи о фото
+      const { error: delPhErr } = await sb
+        .from("product_photos")
+        .delete()
+        .eq("product_id", product.id);
+      if (delPhErr) throw delPhErr;
+    }
+
+    // 4. Удаляем сам товар
+    const { error: delErr } = await sb
+      .from("products")
+      .delete()
+      .eq("id", product.id);
+    if (delErr) throw delErr;
+
+    card.remove();
+    total = Math.max(0, total - 1);
+    countEl.textContent = `Найдено: ${total}`;
+  } catch (err) {
+    alert("Не удалось удалить товар: " + (err.message || err));
+    btn.disabled = false;
+    btn.textContent = "Удалить товар";
   }
 }
 

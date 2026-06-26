@@ -220,6 +220,9 @@ body {
 
 .card-actions {
   margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 /* ---------- Кнопки ---------- */
@@ -248,6 +251,18 @@ button { font-family: inherit; }
   color: var(--text);
 }
 .btn-secondary:hover { background: var(--bg); }
+
+.btn-danger {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background: var(--card);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-danger:disabled { opacity: 0.6; cursor: default; }
 
 .btn-link {
   background: none;
