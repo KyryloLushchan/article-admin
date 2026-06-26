@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Вход — Каталог товаров</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-page">
+  <form id="login-form" class="login-card">
+    <h1>Вход в админку</h1>
+
+    <label>
+      Email
+      <input type="email" id="email" autocomplete="username" required />
+    </label>
+
+    <label>
+      Пароль
+      <input type="password" id="password" autocomplete="current-password" required />
+    </label>
+
+    <button type="submit" id="submit-btn">Войти</button>
+    <p id="error" class="error" hidden></p>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Если уже залогинен — сразу в каталог.
+    getSession().then((session) => {
+      if (session) window.location.href = "index.html";
+    });
+
+    const form = document.getElementById("login-form");
+    const errorEl = document.getElementById("error");
+    const submitBtn = document.getElementById("submit-btn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.hidden = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Вход…";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await signIn(email, password);
+        window.location.href = "index.html";
+      } catch (err) {
+        errorEl.textContent = "Не удалось войти: " + (err.message || err);
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Войти";
+      }
+    });
+  </script>
+</body>
+</html>

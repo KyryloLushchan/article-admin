@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Каталог товаров</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Каталог товаров</h1>
+    <div class="topbar-right">
+      <span id="user-email" class="user-email"></span>
+      <button id="logout-btn" class="btn-secondary">Выйти</button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input
+      type="search"
+      id="search"
+      placeholder="Поиск по артикулу или названию…"
+      autocomplete="off"
+    />
+    <span id="count" class="count"></span>
+  </div>
+
+  <main id="list" class="list"></main>
+
+  <div class="load-more-wrap">
+    <button id="load-more" class="btn-secondary" hidden>Показать ещё</button>
+    <p id="status" class="status"></p>
+  </div>
+
+  <!-- Скрытый input для загрузки фото -->
+  <input type="file" id="photo-input" accept="image/*" multiple hidden />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
