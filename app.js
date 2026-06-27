@@ -77,7 +77,7 @@ async function loadProducts(reset) {
   try {
     let q = sb
       .from("products")
-      .select("id, article, name", { count: "exact" })
+      .select("id, article, name, characteristics", { count: "exact" })
       .order("article", { ascending: true })
       .range(offset, offset + PAGE_SIZE - 1);
 
@@ -122,6 +122,7 @@ function renderCard(product, photos) {
         <button class="btn-link edit-name">✎ змінити</button>
       </div>
     </div>
+    <div class="char-block"></div>
     <div class="gallery"></div>
     <div class="card-actions">
       <button class="btn-secondary add-photo">+ Додати фото</button>
@@ -130,6 +131,7 @@ function renderCard(product, photos) {
   `;
 
   card.querySelector(".gallery").replaceWith(renderGallery(photos));
+  card.querySelector(".char-block").replaceWith(renderCharBlock(product));
 
   // Редагування назви
   card.querySelector(".edit-name").addEventListener("click", () =>
@@ -149,6 +151,77 @@ function renderCard(product, photos) {
   );
 
   return card;
+}
+
+// ---------- блок характеристик ----------
+
+function renderCharBlock(product) {
+  const block = document.createElement("div");
+  block.className = "char-block";
+  renderCharView(block, product);
+  return block;
+}
+
+function renderCharView(block, product) {
+  const value = product.characteristics;
+  block.innerHTML = `
+    <div class="char-head">
+      <span class="char-label">Характеристики</span>
+      <button class="btn-link edit-char">✎ змінити</button>
+    </div>
+    <div class="char-value">${
+      value ? escapeHtml(value) : '<span class="muted">—</span>'
+    }</div>
+  `;
+  block.querySelector(".edit-char").addEventListener("click", () =>
+    startEditCharacteristics(block, product)
+  );
+}
+
+function startEditCharacteristics(block, product) {
+  const current = product.characteristics || "";
+  block.innerHTML = `
+    <div class="char-head">
+      <span class="char-label">Характеристики</span>
+    </div>
+    <textarea class="char-input" rows="4">${escapeHtml(current)}</textarea>
+    <div class="char-actions">
+      <button class="btn-primary btn-sm save-char">Зберегти</button>
+      <button class="btn-link cancel-char">Скасувати</button>
+    </div>
+  `;
+
+  const textarea = block.querySelector(".char-input");
+  textarea.focus();
+
+  block.querySelector(".cancel-char").addEventListener("click", () =>
+    renderCharView(block, product)
+  );
+
+  block.querySelector(".save-char").addEventListener("click", async () => {
+    const newVal = textarea.value.trim();
+    if (newVal === (product.characteristics || "")) {
+      renderCharView(block, product);
+      return;
+    }
+    const btn = block.querySelector(".save-char");
+    btn.disabled = true;
+    btn.textContent = "…";
+
+    const { error } = await sb
+      .from("products")
+      .update({ characteristics: newVal || null })
+      .eq("id", product.id);
+
+    if (error) {
+      alert("Не вдалося зберегти: " + error.message);
+      btn.disabled = false;
+      btn.textContent = "Зберегти";
+      return;
+    }
+    product.characteristics = newVal || null;
+    renderCharView(block, product);
+  });
 }
 
 function renderGallery(photos) {
@@ -439,7 +512,7 @@ addForm.addEventListener("submit", async (e) => {
   const { data, error } = await sb
     .from("products")
     .insert({ article, name })
-    .select("id, article, name")
+    .select("id, article, name, characteristics")
     .single();
 
   addSave.disabled = false;
