@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Каталог товарів</title>
+  <title>Доступи — Адмінка</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <h1>Каталог товарів</h1>
+      <h1>Доступи</h1>
       <nav class="nav">
-        <a href="index.html" class="nav-link active">Каталог</a>
-        <a href="access.html" class="nav-link">Доступи</a>
+        <a href="index.html" class="nav-link">Каталог</a>
+        <a href="access.html" class="nav-link active">Доступи</a>
       </nav>
     </div>
     <div class="topbar-right">
@@ -25,39 +25,51 @@
     <input
       type="search"
       id="search"
-      placeholder="Пошук за артикулом або назвою…"
+      placeholder="Пошук за номером або ім'ям…"
       autocomplete="off"
     />
-    <button id="add-product-btn" class="btn-primary">+ Додати товар</button>
+    <button id="add-user-btn" class="btn-primary">+ Додати</button>
     <span id="count" class="count"></span>
   </div>
 
-  <main id="list" class="list"></main>
-
-  <div class="load-more-wrap">
-    <button id="load-more" class="btn-secondary" hidden>Показати ще</button>
+  <main class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Телефон</th>
+          <th>Ім'я</th>
+          <th>Telegram ID</th>
+          <th>Дата додавання</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
     <p id="status" class="status"></p>
-  </div>
+  </main>
 
-  <!-- Прихований input для завантаження фото -->
-  <input type="file" id="photo-input" accept="image/*" multiple hidden />
-
-  <!-- Модалка додавання товару -->
+  <!-- Модалка додавання користувача -->
   <div id="add-modal" class="modal-overlay" hidden>
     <form id="add-form" class="modal">
-      <h2>Новий товар</h2>
+      <h2>Новий доступ</h2>
       <label>
-        Артикул
-        <input type="text" id="add-article" required autocomplete="off" />
+        Телефон
+        <input
+          type="text"
+          id="add-phone"
+          required
+          autocomplete="off"
+          placeholder="0XX XXX XX XX"
+        />
       </label>
       <label>
-        Назва
+        Ім'я (необов'язково)
         <input type="text" id="add-name" autocomplete="off" />
       </label>
       <p id="add-error" class="error" hidden></p>
       <div class="modal-actions">
         <button type="button" class="btn-secondary" id="add-cancel">Скасувати</button>
-        <button type="submit" class="btn-primary" id="add-save">Створити</button>
+        <button type="submit" class="btn-primary" id="add-save">Додати</button>
       </div>
     </form>
   </div>
@@ -65,6 +77,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
-  <script src="app.js"></script>
+  <script src="access.js"></script>
 </body>
 </html>

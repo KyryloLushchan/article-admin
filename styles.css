@@ -77,6 +77,34 @@ body {
   font-size: 18px;
 }
 
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.nav-link:hover {
+  background: var(--bg);
+}
+
+.nav-link.active {
+  background: var(--primary);
+  color: #fff;
+}
+
 .topbar-right {
   display: flex;
   align-items: center;
@@ -307,6 +335,83 @@ button { font-family: inherit; }
   color: var(--danger);
   font-size: 14px;
   margin: 8px 0 0;
+}
+
+/* ---------- Таблиця доступів ---------- */
+
+.table-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  background: var(--bg);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cell-phone {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cell-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cell-date {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.cell-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cell-name .name-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 13px;
 }
 
 /* ---------- Модалка ---------- */
